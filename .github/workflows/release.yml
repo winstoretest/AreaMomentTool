@@ -18,6 +18,8 @@ env:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -93,5 +95,40 @@ jobs:
           ### Requirements
           - Alibre Design (must be installed before running the installer)
           - Windows 10/11 x64
+
+          ### Direct Download URL (for Microsoft Store)
+          ```
+          https://winstoretest.github.io/AreaMomentTool/AreaMomentTool-${{ steps.get_version.outputs.VERSION }}-Setup.exe
+          ```
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Prepare GitHub Pages
+      shell: bash
+      run: |
+        mkdir -p pages-deploy
+        cp installer/*.exe pages-deploy/
+        echo "# AreaMomentTool Downloads" > pages-deploy/index.html
+        echo "<ul>" >> pages-deploy/index.html
+        for f in pages-deploy/*.exe; do
+          filename=$(basename "$f")
+          echo "<li><a href=\"$filename\">$filename</a></li>" >> pages-deploy/index.html
+        done
+        echo "</ul>" >> pages-deploy/index.html
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: pages-deploy
+
+  deploy-pages:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
