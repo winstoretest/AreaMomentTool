@@ -55,10 +55,10 @@
 // DirectX 9
 #include <d3d9.h>
 
-// Edit the folder path to the type library files below based on where Alibre Design is installed on your computer
-#import "C:\Program Files\Alibre Design 28.1.1.28227\Program\AlibreX_64.tlb"
+// Alibre Design SDK type libraries (included in sdk/ folder for CI builds)
+#import "sdk/AlibreX_64.tlb"
 using namespace AlibreX;
-#import "C:\Program Files\Alibre Design 28.1.1.28227\Program\AlibreAddOn_64.tlb" raw_interfaces_only
+#import "sdk/AlibreAddOn_64.tlb" raw_interfaces_only
 using namespace AlibreAddOn;
 
 
